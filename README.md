@@ -1,7 +1,8 @@
 # Python Implementation - Elo Rating System
 Yet another Python Implementation of the Elo rating system (how innovative am I right?).
 Only supports 1vs1 games at the moment.
-I added the ranking system was just for fun.
+This whole mini-project/library was just made for me to practice my OOP.
+I also added the ranking system was just for fun.
 ## What is the Elo Rating System?
 * The Elo rating system is a method for calculating the relative skill levels of players in zero-sum games such as chess. It is named after its creator Arpad Elo, a Hungarian-American physics professor.
 ## How does the Elo Rating System work? How do I calculate Elo?
