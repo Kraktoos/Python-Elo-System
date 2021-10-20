@@ -215,3 +215,5 @@ class EloSystem:
             else:
                 i["rank"] = "Iron"
                 i["elo"] = 0
+
+# Inspired by https://github.com/HankSheehan/EloPy
