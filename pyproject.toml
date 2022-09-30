@@ -1,0 +1,32 @@
+[project]
+name = "elo-system"
+version = "1.1.0"
+description = "Yet another Python Implementation of the Elo rating system."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Kraktoos", email = "kraktoos@gmail.com" },
+    { name = "Samuel Wu", email = "twopizza9621536@gmail.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.7"
+
+[project.urls]
+Homepage = "https://github.com/TwoPizza9621536/elo_system"
+
+[tool.hatch.build.targets.sdist]
+include = ["/elo_system"]
+
+[tool.pylint.messages_control]
+confidence = "HIGH"
+disable = "C0330, C0326"
+enable = "E, W"
+jobs = 8
+
+[build-system]
+requires = ["hatchling>=1.10.0"]
+build-backend = "hatchling.build"
