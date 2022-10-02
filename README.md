@@ -3,9 +3,11 @@
 This is a fork of Python Implementation - Elo Rating System by Kraktoos and adds
 the following features:
 
-- A way to turn off ranks (and returns "Rankings are turned off" if it is off).
+- A way to turn off ranks (and raises a RuntimeError when turned off).
 - Win, lose and draw counts.
 - Uses hatch instead of setup.py for packaging.
+
+See the tests folder for more examples.
 
 ## Original Readme
 
@@ -77,7 +79,7 @@ print(elo.get_overall_list())
 
 ```bash
 [{'player': 'Marcus', 'elo': 1400, 'rank': 'Silver'}, {'player': 'John', 'elo': 1000, 'rank': 'Iron'}]
-[{'player': 'Marcus', 'elo': 1402, 'rank': 'Silver'}, {'player': 'John', 'elo': 997, 'rank': 'Iron'}] 
+[{'player': 'Marcus', 'elo': 1402, 'rank': 'Silver'}, {'player': 'John', 'elo': 997, 'rank': 'Iron'}]
 [{'player': 'Marcus', 'elo': 1372, 'rank': 'Silver'}, {'player': 'John', 'elo': 1026, 'rank': 'Iron'}]
 [{'player': 'Marcus', 'elo': 1359, 'rank': 'Silver'}, {'player': 'John', 'elo': 1038, 'rank': 'Iron'}]
 ```

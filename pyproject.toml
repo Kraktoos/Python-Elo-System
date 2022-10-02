@@ -21,11 +21,47 @@ Homepage = "https://github.com/TwoPizza9621536/elo_system"
 [tool.hatch.build.targets.sdist]
 include = ["/elo_system"]
 
+[tool.hatch.envs.test]
+dependencies = ["pytest", "coverage[toml]"]
+
+[tool.hatch.envs.test.scripts]
+run = ["coverage erase", "coverage run", "coverage report"]
+
+[[tool.hatch.envs.test.matrix]]
+python = ["37", "38", "39", "310"]
+
+[tool.hatch.envs.lint]
+detached = true
+dependencies = ["pylint", "black", "isort", "flake8"]
+
+[tool.hatch.envs.lint.scripts]
+format = ["pylint .", "isort .", "black .", "flake8 ."]
+
 [tool.pylint.messages_control]
 confidence = "HIGH"
-disable = "C0330, C0326"
 enable = "E, W"
 jobs = 8
+
+[tool.pylint.format]
+max-line-length = 79
+
+[tool.black]
+ensure-newline-before-comments = true
+line-length = 79
+target-version = ["py37", "py38", "py39", "py310"]
+use-parentheses = true
+skip-string-normalization = true
+
+[tool.isort]
+ensure_newline_before_comments = true
+line_length = 79
+profile = "black"
+use_parentheses = true
+
+[tool.coverage.run]
+branch = true
+command_line = "-m pytest"
+omit = ["/usr/*"]
 
 [build-system]
 requires = ["hatchling>=1.10.0"]
