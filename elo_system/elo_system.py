@@ -327,6 +327,9 @@ class EloSystem:
         Raises:
             ValueError: The one of the two Players are not in the Players List.
         """
+        elo_a: int = -1
+        elo_b: int = -1
+
         for i in self.players:
             if i['player'] == player_a:
                 index_a = self.players.index(i)
@@ -334,10 +337,11 @@ class EloSystem:
             elif i['player'] == player_b:
                 index_b = self.players.index(i)
                 elo_b = i['elo']
-            else:
-                raise ValueError(
-                    f"Player {player_a} or Player {player_b} not found"
-                )
+
+        if elo_a == -1:
+            raise ValueError(f"Player {player_a} not found")
+        elif elo_b == -1:
+            raise ValueError(f"Player {player_b} not found")
 
         ratings_a = 10 ** (elo_a / 400)
         ratings_b = 10 ** (elo_b / 400)

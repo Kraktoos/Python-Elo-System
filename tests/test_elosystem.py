@@ -118,19 +118,20 @@ def test_raises_valueerror_singleparam(example_system: EloSystem, function):
 
 
 @pytest.mark.parametrize(
-    "function, input",
+    "function, input_one, input_two",
     [
-        ("record_match", "'Alice'"),
-        ("set_elo", 100),
-        ("add_elo", 100),
-        ("remove_elo", 100),
+        ("record_match", "'Charlie'", "'Alice'"),
+        ("record_match", "'Alice'", "'Charlie'"),
+        ("set_elo", "'Charlie'", 100),
+        ("add_elo", "'Charlie'", 100),
+        ("remove_elo", "'Charlie'", 100),
     ],
 )
 def test_raises_valueerror_doubleparam(
-    example_system: EloSystem, function, input
+    example_system: EloSystem, function, input_one, input_two
 ):
     with pytest.raises(ValueError):
-        eval(f"example_system.{function}('Charlie', {input})")
+        eval(f"example_system.{function}({input_one}, {input_two})")
 
 
 def test_set_reset_elo_and_len(example_system: EloSystem):
