@@ -9,7 +9,9 @@ Edited: Samuel Wu
 class EloSystem:
     """A class that represents an implementation of the Elo Rating System."""
 
-    def __init__(self, base_elo: int = 1000, k: int = 32):
+    def __init__(
+        self, base_elo: int = 1000, k: int = 32, rankings: bool = True
+    ):
         """Initializes the Elo System.
 
         Args:
@@ -17,10 +19,13 @@ class EloSystem:
             have. Defaults to 1000.
             k (int, optional): The value you want the Elo to change by.
             Defaults to 32.
+            rankings (bool, optional): Turn off the rankings if provided False.
+            Defaults to True.
         """
         self.base_elo: int = base_elo
         self.k: int = k
         self.players: list = []
+        self.rankings: bool = rankings
 
     # Player Methods
 
@@ -33,15 +38,25 @@ class EloSystem:
         """
         if elo is None:
             elo = self.base_elo
-
-        self.players.append({
-            "player": player,
-            "elo": elo,
-            "wins": 0,
-            "losses": 0,
-            "draws": 0,
-        })
-        self._check_elo()
+        if self.rankings:
+            info = {
+                "player": player,
+                "elo": elo,
+                "wins": 0,
+                "losses": 0,
+                "draws": 0,
+                "rank": None,
+            }
+        else:
+            info = {
+                "player": player,
+                "elo": elo,
+                "wins": 0,
+                "losses": 0,
+                "draws": 0,
+            }
+        self.players.append(info)
+        self._update_everything()
 
     def remove_player(self, player: str) -> None:
         """Removes a Player from the Players List.
@@ -73,7 +88,7 @@ class EloSystem:
         for i in self.players:
             if i['player'] == player:
                 i['elo'] = elo
-                self._check_elo()
+                self._update_everything()
                 return
         raise ValueError(f"Player {player} not found")
 
@@ -90,7 +105,7 @@ class EloSystem:
         for i in self.players:
             if i['player'] == player:
                 i['elo'] = self.base_elo
-                self._check_elo()
+                self._update_everything()
                 return
         raise ValueError(f"Player {player} not found")
 
@@ -107,7 +122,7 @@ class EloSystem:
         for i in self.players:
             if i['player'] == player:
                 i['elo'] += elo
-                self._check_elo()
+                self._update_everything()
                 return
         raise ValueError(f"Player {player} not found")
 
@@ -125,7 +140,7 @@ class EloSystem:
         for i in self.players:
             if i['player'] == player:
                 i['elo'] -= elo
-                self._check_elo()
+                self._update_everything()
                 return
         raise ValueError(f"Player {player} not found")
 
@@ -147,6 +162,27 @@ class EloSystem:
             if i['player'] == player:
                 return i['elo']
         raise ValueError(f"Player {player} not found")
+
+    def get_player_rank(self, player: str) -> str:
+        """Returns a Player's Rank.
+
+        Args:
+            player (str): The Player you want to get the Rank from.
+
+        Returns:
+            str: The Rank of the Player.
+
+        Raises:
+            ValueError: The Player is not in the List of Players.
+            RuntimeError: The user want the Rank of the Player but Rankings are
+            turned off.
+        """
+        if self.rankings:
+            for i in self.players:
+                if i['player'] == player:
+                    return i['rank']
+            raise ValueError(f"Player {player} not found")
+        raise RuntimeError("Rankings are turned off")
 
     def get_player_wins(self, player: str) -> int:
         """Returns a Player's Wins count.
@@ -210,7 +246,7 @@ class EloSystem:
     # Return List Methods
 
     def get_overall_list(self):
-        """Returns a List of all Players and their Elo.
+        """Returns the Player, Elo and Ranks List.
 
         Returns:
             list: List of all the Players in the Elo system.
@@ -227,6 +263,22 @@ class EloSystem:
             list: List of Players with the given Elo.
         """
         return [i['player'] for i in self.players if i['elo'] == elo]
+
+    def get_players_with_rank(self, rank: str) -> list:
+        """Returns a List of Players with the given Rank.
+        Args:
+            rank (str): The Rank to get the Players with.
+
+        Returns:
+            list: List of Players with the given Rank.
+
+        Raises:
+            RuntimeError: The user want a List of Players with the given Rank
+            but Rankings are turned off.
+        """
+        if self.rankings:
+            return [i['player'] for i in self.players if i['rank'] == rank]
+        raise RuntimeError("Rankings are turned off")
 
     def get_players_with_wins(self, wins: int) -> list:
         """Returns a List of Players with the given number of Wins.
@@ -315,12 +367,32 @@ class EloSystem:
         self.players[index_a]['elo'] += self.k * (score_a - expected_score_a)
         self.players[index_b]['elo'] += self.k * (score_b - expected_score_b)
 
-        self._check_elo()
+        self._update_everything()
 
-    def _check_elo(self) -> None:
-        """Check that Players don't get negative Elo."""
+    def _update_everything(self) -> None:
+        """Updates all Ranks and guarantees that Players don't get negative
+        Elo.
+        """
         for i in self.players:
-            i['elo'] = max(int(i['elo']), 0)
+            i['elo'] = int(i['elo'])
+            if self.rankings:
+                if i['elo'] >= 2400:
+                    i['rank'] = "Grand Master"
+                elif i['elo'] >= 2000:
+                    i['rank'] = "Master"
+                elif i['elo'] >= 1850:
+                    i['rank'] = "Diamond"
+                elif i['elo'] >= 1650:
+                    i['rank'] = "Platinum"
+                elif i['elo'] >= 1500:
+                    i['rank'] = "Gold"
+                elif i['elo'] >= 1300:
+                    i['rank'] = "Silver"
+                elif i['elo'] >= 1100:
+                    i['rank'] = "Bronze"
+                else:
+                    i['rank'] = "Iron"
+            i['elo'] = max(i['elo'], 0)
 
 
 # Inspired by https://github.com/HankSheehan/EloPy

@@ -3,8 +3,7 @@
 This is a fork of Python Implementation - Elo Rating System by Kraktoos and adds
 the following features:
 
-- ~~A way to turn off ranks (and raises a RuntimeError when turned off).~~
-- Rankings are removed, it was hindering my use case.
+- A way to turn off ranks (and raises a RuntimeError when turned off).
 - Win, lose and draw counts.
 - Uses hatch instead of setup.py for packaging.
 

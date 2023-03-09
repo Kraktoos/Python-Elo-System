@@ -18,6 +18,21 @@ def example_system() -> EloSystem:
     return elo
 
 
+@pytest.fixture
+def disabled_ranking_system() -> EloSystem:
+    """Create an EloSystem with two Players without Rankings for testing.
+
+    Returns:
+        EloSystem: An EloSystem with two Players without Rankings.
+    """
+    elo = EloSystem(rankings=False)
+
+    elo.add_player("Alice")
+    elo.add_player("Bob", 1400)
+
+    return elo
+
+
 def test_remove_player(example_system: EloSystem):
     assert example_system.get_overall_list() == [
         {
@@ -26,6 +41,7 @@ def test_remove_player(example_system: EloSystem):
             'wins': 0,
             'losses': 0,
             'draws': 0,
+            'rank': 'Silver',
         },
         {
             'player': 'Alice',
@@ -33,6 +49,7 @@ def test_remove_player(example_system: EloSystem):
             'wins': 0,
             'losses': 0,
             'draws': 0,
+            'rank': 'Iron',
         },
     ]
 
@@ -45,6 +62,7 @@ def test_remove_player(example_system: EloSystem):
             'wins': 0,
             'losses': 0,
             'draws': 0,
+            'rank': 'Iron',
         }
     ]
 
@@ -64,10 +82,12 @@ def test_add_remove_elo(example_system: EloSystem, function, elo, expected):
 @pytest.mark.parametrize(
     "function, input, expected",
     [
+        ("get_player_rank", "'Alice'", "Iron"),
         ("get_player_wins", "'Alice'", 1),
         ("get_player_losses", "'Alice'", 1),
         ("get_player_draws", "'Alice'", 1),
         ("get_players_with_elo", 1037, ['Alice']),
+        ("get_players_with_rank", "'Iron'", ['Alice']),
         ("get_players_with_wins", 1, ['Alice', 'Bob']),
         ("get_players_with_losses", 1, ['Alice', 'Bob']),
         ("get_players_with_draws", 1, ['Alice', 'Bob']),
@@ -83,6 +103,7 @@ def test_get_methods(example_system: EloSystem, function, input, expected):
 @pytest.mark.parametrize(
     "function",
     [
+        ("get_player_rank"),
         ("get_player_wins"),
         ("get_player_losses"),
         ("get_player_draws"),
@@ -122,3 +143,11 @@ def test_set_reset_elo_and_len(example_system: EloSystem):
     assert example_system.get_player_elo("Alice") == 1000
 
     assert example_system.get_player_count() == 2
+
+
+def test_disabled_rankings(disabled_ranking_system: EloSystem):
+    with pytest.raises(RuntimeError):
+        disabled_ranking_system.get_player_rank("Alice")
+
+    with pytest.raises(RuntimeError):
+        disabled_ranking_system.get_players_with_rank("Iron")
