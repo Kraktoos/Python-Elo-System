@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2022 Samuel Wu
+#
+# SPDX-License-Identifier: MIT
 import pytest
 
 from elo_system.elo_system import EloSystem

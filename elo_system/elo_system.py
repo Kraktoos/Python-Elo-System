@@ -1,6 +1,10 @@
+# SPDX-FileCopyrightText: 2021 Kraktoos
+# SPDX-FileCopyrightText: 2022 Samuel Wu
+#
+# SPDX-License-Identifier: MIT
 """
 Created: 10/20/2021
-Modified:
+Modified: 10/01/2022
 Author: Kraktoos
 Edited: Samuel Wu
 """

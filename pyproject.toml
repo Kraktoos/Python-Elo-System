@@ -1,9 +1,14 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "elo-system"
-version = "1.2.1"
-description = "Yet another Python Implementation of the Elo rating system."
+description = 'Yet another Python Implementation of the Elo rating system.'
 readme = "README.md"
-license = { text = "MIT" }
+requires-python = ">=3.7"
+license = "MIT"
+keywords = []
 authors = [
     { name = "Kraktoos", email = "kraktoos@gmail.com" },
     { name = "Samuel Wu", email = "twopizza9621536@gmail.com" },
@@ -13,22 +18,25 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.7"
+dependencies = []
+dynamic = ["version"]
 
 [project.urls]
-Homepage = "https://github.com/TwoPizza9621536/elo_system"
+Documentation = "https://github.com/TwoPizza9621536/elo-system#readme"
+Issues = "https://github.com/TwoPizza9621536/elo-system/issues"
+Source = "https://github.com/TwoPizza9621536/elo-system"
 
-[tool.hatch.build.targets.sdist]
-include = ["/elo_system"]
+[tool.hatch.version]
+path = "elo_system/__about__.py"
 
-[tool.hatch.envs.test]
-dependencies = ["pytest", "coverage[toml]"]
-
-[tool.hatch.envs.test.scripts]
-run = ["coverage erase", "coverage run", "coverage report"]
+[tool.hatch.envs.default]
+dependencies = ["pytest", "pytest-cov"]
+[tool.hatch.envs.default.scripts]
+cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=elo_system --cov=tests {args}"
+no-cov = "cov --no-cov {args}"
 
 [[tool.hatch.envs.test.matrix]]
-python = ["37", "38", "39", "310"]
+python = ["37", "38", "39", "310", "311"]
 
 [tool.hatch.envs.lint]
 detached = true
@@ -60,9 +68,8 @@ use_parentheses = true
 
 [tool.coverage.run]
 branch = true
-command_line = "-m pytest"
-omit = ["/usr/*"]
+parallel = true
+omit = ["elo_system/__about__.py"]
 
-[build-system]
-requires = ["hatchling>=1.10.0"]
-build-backend = "hatchling.build"
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
