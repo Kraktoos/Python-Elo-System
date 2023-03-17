@@ -33,9 +33,11 @@ def test_ranked_elo_methods(ranked_system: EloSystem):
     ranked_system.remove_elo("Alice", 200)
     assert ranked_system.get_player_rank("Alice") == "Bronze"
 
+    ranked_system.reset_elo("Alice")
+    assert ranked_system.get_player_rank("Alice") == "Iron"
+
 
 def test_get_methods(ranked_system: EloSystem):
-    assert ranked_system.get_player_rank("Alice") == "Iron"
     assert ranked_system.get_players_with_rank("Iron") == ["Alice"]
 
 
