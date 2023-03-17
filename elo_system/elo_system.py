@@ -262,11 +262,8 @@ class EloSystem:
         player_a = self.players[winner]
         player_b = self.players[loser]
 
-        elo_a = player_a.elo
-        elo_b = player_b.elo
-
-        ratings_a = 10 ** (elo_a / 400)
-        ratings_b = 10 ** (elo_b / 400)
+        ratings_a = 10 ** (player_a.elo / 400)
+        ratings_b = 10 ** (player_b.elo / 400)
         expected_score_a = ratings_a / (ratings_a + ratings_b)
         expected_score_b = ratings_b / (ratings_a + ratings_b)
 
@@ -278,5 +275,5 @@ class EloSystem:
         else:
             player_a.wins += 1
             player_b.losses += 1
-            self.add_elo(winner, int(self.k_factor * (0.5 - expected_score_a)))
-            self.add_elo(loser, int(self.k_factor * (0.5 - expected_score_b)))
+            self.add_elo(winner, int(self.k_factor * (1 - expected_score_a)))
+            self.add_elo(loser, int(self.k_factor * (0 - expected_score_b)))
