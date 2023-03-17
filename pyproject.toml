@@ -3,8 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "elo-system"
-description = 'Yet another Python Implementation of the Elo rating system.'
+name = "Python-Elo-System"
+description = ""
+version = "2.0.0"
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
@@ -13,24 +14,17 @@ authors = [
     { name = "Kraktoos", email = "kraktoos@gmail.com" },
     { name = "Samuel Wu", email = "twopizza9621536@gmail.com" },
 ]
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-]
+classifiers = ["Programming Language :: Python"]
 dependencies = []
-dynamic = ["version"]
 
 [project.urls]
-Documentation = "https://github.com/TwoPizza9621536/elo-system#readme"
-Issues = "https://github.com/TwoPizza9621536/elo-system/issues"
-Source = "https://github.com/TwoPizza9621536/elo-system"
-
-[tool.hatch.version]
-path = "elo_system/__about__.py"
+Documentation = "https://github.com/TwoPizza9621536/python-elo-system#readme"
+Issues = "https://github.com/TwoPizza9621536/python-elo-system/issues"
+Source = "https://github.com/TwoPizza9621536/python-elo-system"
 
 [tool.hatch.envs.default]
 dependencies = ["pytest", "pytest-cov"]
+
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=elo_system --cov=tests {args}"
 no-cov = "cov --no-cov {args}"
@@ -40,36 +34,43 @@ python = ["37", "38", "39", "310", "311"]
 
 [tool.hatch.envs.lint]
 detached = true
-dependencies = ["pylint", "black", "isort", "flake8"]
+dependencies = ["black", "flake8", "isort", "mypy", "pydocstyle", "pylint"]
 
 [tool.hatch.envs.lint.scripts]
-format = ["pylint .", "isort .", "black .", "flake8 ."]
-
-[tool.pylint.messages_control]
-confidence = "HIGH"
-enable = "E, W"
-jobs = 8
-
-[tool.pylint.format]
-max-line-length = 79
-
-[tool.black]
-ensure-newline-before-comments = true
-line-length = 79
-target-version = ["py37", "py38", "py39", "py310"]
-use-parentheses = true
-skip-string-normalization = true
-
-[tool.isort]
-ensure_newline_before_comments = true
-line_length = 79
-profile = "black"
-use_parentheses = true
+format = [
+    "pylint elo_system tests",
+    "flake8 elo_system tests",
+    "mypy elo_system tests",
+    "black elo_system tests",
+    "isort elo_system tests",
+    "pydocstyle elo_system",
+]
 
 [tool.coverage.run]
 branch = true
 parallel = true
-omit = ["elo_system/__about__.py"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+
+[tool.pylint.main]
+py-version = "3.7"
+recursive = true
+
+[tool.pylint.format]
+max-line-length = 79
+
+[tool.autopep8]
+in-place = true
+recursive = true
+aggressive = 3
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
+
+[tool.pydocstyle]
+convention = "pep257"
+add-ignore = "D104,D205"

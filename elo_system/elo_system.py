@@ -1,402 +1,282 @@
 # SPDX-FileCopyrightText: 2021 Kraktoos
-# SPDX-FileCopyrightText: 2022 Samuel Wu
+# SPDX-FileCopyrightText: 2022-2013 Samuel Wu
 #
 # SPDX-License-Identifier: MIT
 """
-Created: 10/20/2021
-Modified: 10/01/2022
-Author: Kraktoos
-Edited: Samuel Wu
+Originally created by Kraktoos on 10/20/2021.
+Rewritten by Samuel Wu on 03/15/2023.
 """
+
+from typing import Optional, Union
+
+from elo_system.player import Player
 
 
 class EloSystem:
     """A class that represents an implementation of the Elo Rating System."""
 
     def __init__(
-        self, base_elo: int = 1000, k: int = 32, rankings: bool = True
-    ):
-        """Initializes the Elo System.
+        self,
+        base_elo: int = 1000,
+        k_factor: int = 32,
+        *,
+        rankings: bool = False,
+    ) -> None:
+        """Initialize the Elo System.
 
-        Args:
-            base_elo (int, optional): The base Elo that you want everyone to
-            have. Defaults to 1000.
-            k (int, optional): The value you want the Elo to change by.
-            Defaults to 32.
-            rankings (bool, optional): Turn off the rankings if provided False.
-            Defaults to True.
+        :param base_elo: The default and average average for all players,
+        defaults to 1000.
+        :type base_elo: int, optional
+        :param k_factor: The amount ratings change for players, defaults to 32.
+        :type k_factor: int, optional
+        :param rankings: Turn rankings on or off, defaults to False.
+        :type rankings: bool, optional
         """
-        self.base_elo: int = base_elo
-        self.k: int = k
-        self.players: list = []
-        self.rankings: bool = rankings
+        self.base_elo = base_elo
+        self.k_factor = k_factor
+        self.players: dict[str, Player] = {}
+        self.rankings = rankings
 
     # Player Methods
 
-    def add_player(self, player: str, elo: int = None) -> None:
-        """Adds a Player to the Player List.
+    def add_player(self, player: str, elo: Optional[int] = None) -> None:
+        """Add a player to the system.
 
-        Args:
-            player (str): The Player to add.
-            elo (int, optional): Their initial elo value. Defaults to None.
+        :param player: The name of the player.
+        :type name: str
+        :param elo: The initial ratings for the player, defaults to None.
+        :type elo: Optional[int], optional
         """
         if elo is None:
             elo = self.base_elo
+
+        self.players[player] = Player(elo)
+
         if self.rankings:
-            info = {
-                "player": player,
-                "elo": elo,
-                "wins": 0,
-                "losses": 0,
-                "draws": 0,
-                "rank": None,
-            }
-        else:
-            info = {
-                "player": player,
-                "elo": elo,
-                "wins": 0,
-                "losses": 0,
-                "draws": 0,
-            }
-        self.players.append(info)
-        self._update_everything()
+            self.players[player].calculate_rank()
 
     def remove_player(self, player: str) -> None:
-        """Removes a Player from the Players List.
+        """Remove a player from the system.
 
-        Args:
-            player (str): The Player to remove.
-
-        Raises:
-            ValueError: The Player is not in the List of Players.
+        :param player: The name of the player.
+        :type player: str
         """
-        for i in self.players:
-            if i['player'] == player:
-                self.players.remove(i)
-                return
-        raise ValueError(f"Player {player} not found")
+        del self.players[player]
 
     # Elo Methods
 
     def set_elo(self, player: str, elo: int) -> None:
-        """Sets a Players Elo.
+        """Set new ratings for a player.
 
-        Args:
-            player (str): The Player you want to their to be set.
-            elo (int): The Elo you want the player to have.
-
-        Raises:
-            ValueError: The Player is not in the List of Players.
+        :param player: The name of the player.
+        :type player: str
+        :param elo: The new ratings for the player.
+        :type elo: int
         """
-        for i in self.players:
-            if i['player'] == player:
-                i['elo'] = elo
-                self._update_everything()
-                return
-        raise ValueError(f"Player {player} not found")
+        self.players[player].elo = elo
+
+        if self.rankings:
+            self.players[player].calculate_rank()
 
     def reset_elo(self, player: str) -> None:
-        """Reset a player's Elo.
+        """Set a player's rating back to the average rating.
 
-        Args:
-            player (str): The Player that you want their Elo to reset to the
-            base Elo.
-
-        Raises:
-            ValueError: The Player is not in the List of Players.
+        :param player: The name of the player.
+        :type player: str
         """
-        for i in self.players:
-            if i['player'] == player:
-                i['elo'] = self.base_elo
-                self._update_everything()
-                return
-        raise ValueError(f"Player {player} not found")
+        self.players[player].elo = self.base_elo
+
+        if self.rankings:
+            self.players[player].calculate_rank()
 
     def add_elo(self, player: str, elo: int) -> None:
-        """Adds Elo to a Player.
+        """Add ratings to a player.
 
-        Args:
-            player (str): The Player that you want their Elo to be add.
-            elo (int): The amount of Elo to add by.
-
-        Raises:
-            ValueError: The Player is not in the List of Players.
+        :param player: The name of a player.
+        :type player: str
+        :param elo: The amount of ratings to add.
+        :type elo: int
         """
-        for i in self.players:
-            if i['player'] == player:
-                i['elo'] += elo
-                self._update_everything()
-                return
-        raise ValueError(f"Player {player} not found")
+        self.players[player].elo += elo
+
+        if self.rankings:
+            self.players[player].calculate_rank()
 
     def remove_elo(self, player: str, elo: int) -> None:
-        """Removes Elo to a Player.
+        """Remove ratings of a player.
 
-        Args:
-            player (str): The Player that you want their Elo to be remove.
-            elo (int): The amount of Elo to remove by.
-
-
-        Raises:
-            ValueError: The Player is not in the List of Players.
+        :param player: The name of a player.
+        :type player: str
+        :param elo: The amount of ratings to remove.
+        :type elo: int
         """
-        for i in self.players:
-            if i['player'] == player:
-                i['elo'] -= elo
-                self._update_everything()
-                return
-        raise ValueError(f"Player {player} not found")
+        self.players[player].elo -= elo
+
+        if self.rankings:
+            self.players[player].calculate_rank()
 
     # Return Methods
 
     def get_player_elo(self, player: str) -> int:
-        """Returns a Player's Elo.
+        """Get the ratings of a player.
 
-        Args:
-            player (str): The Player you want to get the Elo from.
-
-        Returns:
-            int: The Elo of the Player.
-
-        Raises:
-            ValueError: The Player is not in the List of Players.
+        :param player: The name of a player.
+        :type player: str
+        :return: The ratings of a player.
+        :rtype: int
         """
-        for i in self.players:
-            if i['player'] == player:
-                return i['elo']
-        raise ValueError(f"Player {player} not found")
+        return self.players[player].elo
 
-    def get_player_rank(self, player: str) -> str:
-        """Returns a Player's Rank.
+    def get_player_rank(self, player: str) -> Optional[str]:
+        """Get the rank of a player.
 
-        Args:
-            player (str): The Player you want to get the Rank from.
-
-        Returns:
-            str: The Rank of the Player.
-
-        Raises:
-            ValueError: The Player is not in the List of Players.
-            RuntimeError: The user want the Rank of the Player but Rankings are
-            turned off.
+        :param player: The name of a player.
+        :type player: str
+        :return: The rank of the player, defaults to None of rankings are
+        turned off.
+        :rtype: Optional[str]
         """
-        if self.rankings:
-            for i in self.players:
-                if i['player'] == player:
-                    return i['rank']
-            raise ValueError(f"Player {player} not found")
-        raise RuntimeError("Rankings are turned off")
+
+        return self.players[player].rank
 
     def get_player_wins(self, player: str) -> int:
-        """Returns a Player's Wins count.
+        """Get the number of times a player has won.
 
-        Args:
-            player (str): The Player you want to get the Wins from.
-
-        Returns:
-            int: The number of Wins for the Player.
-
-        Raises:
-            ValueError: The Player is not in the List of Players.
+        :param player: The name of the player.
+        :type player: str
+        :return: The number of wins.
+        :rtype: int
         """
-        for i in self.players:
-            if i['player'] == player:
-                return i['wins']
-        raise ValueError(f"Player {player} not found")
+        return self.players[player].wins
 
     def get_player_losses(self, player: str) -> int:
-        """Returns a Player's Losses count.
+        """Get the number of times a player has lost.
 
-        Args:
-            player (str): The Player you want to get the Losses from.
-
-        Returns:
-            int: The number of Losses for the Player.
-
-        Raises:
-            ValueError: The Player is not in the List of Players.
+        :param player: The name of the player.
+        :type player: str
+        :return: The number of losses.
+        :rtype: int
         """
-        for i in self.players:
-            if i['player'] == player:
-                return i['losses']
-        raise ValueError(f"Player {player} not found")
+        return self.players[player].losses
 
     def get_player_draws(self, player: str) -> int:
-        """Returns a Player's Draws count.
+        """Get the number of times a player has drawn.
 
-        Args:
-            player (str): The Player you want to get the Draws from.
-
-        Returns:
-            int: The number of Draws for the Player.
-
-        Raises:
-            ValueError: The Player is not in the List of Players.
+        :param player: The name of the player.
+        :type player: str
+        :return: The number of draws.
+        :rtype: int
         """
-        for i in self.players:
-            if i['player'] == player:
-                return i['draws']
-        raise ValueError(f"Player {player} not found")
+        return self.players[player].draws
 
     def get_player_count(self) -> int:
-        """Returns the Player Count
+        """Get the amount of players in the system.
 
-        Returns:
-            int: The number of players in the Elo system.
+        :return: The number of players.
+        :rtype: int
         """
         return len(self.players)
 
     # Return List Methods
+    def get_overall_list(self) -> list[dict[str, Union[int, str]]]:
+        """Get the statistic of all players in the system.
 
-    def get_overall_list(self):
-        """Returns the Player, Elo and Ranks List.
-
-        Returns:
-            list: List of all the Players in the Elo system.
+        :return: List of all the players with their statistics.
+        :rtype: list[dict[str, Union[int, str]]]
         """
-        return sorted(self.players, key=lambda d: d['elo'], reverse=True)
+        players: list[dict[str, Union[int, str]]] = []
 
-    def get_players_with_elo(self, elo: int):
-        """Returns a List of Players with the given Elo.
+        for key, val in self.players.items():
+            dictionary: dict[str, Union[int, str]] = {"player": key}
+            dictionary.update(val.asdict())
+            players.append(dictionary)
 
-        Args:
-            elo (int): The Elo to get Players from.
+        return sorted(players, key=lambda d: d["elo"], reverse=True)
 
-        Returns:
-            list: List of Players with the given Elo.
+    def get_players_with_elo(self, elo: int) -> list[str]:
+        """Get all players with an exact rating.
+
+        :param elo: The rating to search from.
+        :type elo: int
+        :return: All the players with that rating.
+        :rtype: list[str]
         """
-        return [i['player'] for i in self.players if i['elo'] == elo]
+        return [key for key, val in self.players.items() if val.elo == elo]
 
-    def get_players_with_rank(self, rank: str) -> list:
-        """Returns a List of Players with the given Rank.
-        Args:
-            rank (str): The Rank to get the Players with.
+    def get_players_with_rank(self, rank: str) -> list[str]:
+        """Get all players with a rank.
 
-        Returns:
-            list: List of Players with the given Rank.
-
-        Raises:
-            RuntimeError: The user want a List of Players with the given Rank
-            but Rankings are turned off.
+        :param rank: The rank to search from.
+        :type rank: str
+        :return: All the players with that rank.
+        :rtype: list[str]
         """
-        if self.rankings:
-            return [i['player'] for i in self.players if i['rank'] == rank]
-        raise RuntimeError("Rankings are turned off")
+        return [key for key, val in self.players.items() if val.rank == rank]
 
-    def get_players_with_wins(self, wins: int) -> list:
-        """Returns a List of Players with the given number of Wins.
-        Args:
-            wins (int): The number of Wins to get the Players with.
+    def get_players_with_wins(self, wins: int) -> list[str]:
+        """Get all players with an exact number of wins.
 
-        Returns:
-            list: List of Players with the given number of Wins.
+        :param wins: The number of wins to search from.
+        :type wins: int
+        :return: All the players with that number of wins.
+        :rtype: list[str]
         """
-        return [i['player'] for i in self.players if i['wins'] == wins]
+        return [key for key, val in self.players.items() if val.wins == wins]
 
-    def get_players_with_losses(self, losses: int) -> list:
-        """Returns a List of Players with the given number of Losses.
-        Args:
-            losses (int): The number of Losses to get the Players with.
+    def get_players_with_losses(self, losses: int) -> list[str]:
+        """Get all players with an exact number of losses.
 
-        Returns:
-            list: List of Players with the given number of Losses.
+        :param losses: The number of losses to search from.
+        :type losses: int
+        :return: All the players with that number of losses.
+        :rtype: list[str]
         """
-        return [i['player'] for i in self.players if i['losses'] == losses]
+        return [
+            key for key, val in self.players.items() if val.losses == losses
+        ]
 
-    def get_players_with_draws(self, draws: int) -> list:
-        """Returns a List of Players with the given number of Draws.
-        Args:
-            draws (int): The number of Draws to get the Players with.
+    def get_players_with_draws(self, draws: int) -> list[str]:
+        """Get all players with an exact number of draws.
 
-        Returns:
-            list: List of Players with the given number of Draws.
+        :param draws: The number of draws to search from.
+        :type draws: int
+        :return: All the players with that number of draws.
+        :rtype: list[str]
         """
-        return [i['player'] for i in self.players if i['draws'] == draws]
+        return [key for key, val in self.players.items() if val.draws == draws]
 
     # Main Matching System
 
     def record_match(
-        self, player_a: str, player_b: str, winner: str = None
+        self, *, winner: str, loser: str, draw: bool = False
     ) -> None:
-        """Runs the Calculations and Updates the Score of both Player A and B
-        Following a Simple Elo System.
+        """Calculate the players' ratings based on of they won, lost or drawn.
 
-        Args:
-            player_a (str): The first Player in a match.
-            player_b (str): The second Player in a match.
-            winner (str): The Player you want to win. None for a
-            draw. Defaults to None.
-
-        Raises:
-            ValueError: The one of the two Players are not in the Players List.
+        :param winner: The name of the player who won a match.
+        :type winner: str
+        :param loser: The name of the player who lost a match.
+        :type loser: str
+        :param draw: Make the match be a draw, defaults to False.
+        :type draw: bool, optional
         """
-        elo_a: int = -1
-        elo_b: int = -1
+        player_a = self.players[winner]
+        player_b = self.players[loser]
 
-        for i in self.players:
-            if i['player'] == player_a:
-                index_a = self.players.index(i)
-                elo_a = i['elo']
-            elif i['player'] == player_b:
-                index_b = self.players.index(i)
-                elo_b = i['elo']
-
-        if elo_a == -1:
-            raise ValueError(f"Player {player_a} not found")
-        elif elo_b == -1:
-            raise ValueError(f"Player {player_b} not found")
+        elo_a = player_a.elo
+        elo_b = player_b.elo
 
         ratings_a = 10 ** (elo_a / 400)
         ratings_b = 10 ** (elo_b / 400)
         expected_score_a = ratings_a / (ratings_a + ratings_b)
         expected_score_b = ratings_b / (ratings_a + ratings_b)
 
-        if winner == player_a:
-            score_a = 1
-            score_b = 0
-            self.players[index_a]['wins'] += 1
-            self.players[index_b]['losses'] += 1
-        elif winner == player_b:
-            score_a = 0
-            score_b = 1
-            self.players[index_a]['losses'] += 1
-            self.players[index_b]['wins'] += 1
+        if draw:
+            player_a.draws += 1
+            player_b.draws += 1
+            self.add_elo(winner, int(self.k_factor * (0.5 - expected_score_a)))
+            self.add_elo(loser, int(self.k_factor * (0.5 - expected_score_b)))
         else:
-            score_a = 0.5
-            score_b = 0.5
-            self.players[index_a]['draws'] += 1
-            self.players[index_b]['draws'] += 1
-
-        self.players[index_a]['elo'] += self.k * (score_a - expected_score_a)
-        self.players[index_b]['elo'] += self.k * (score_b - expected_score_b)
-
-        self._update_everything()
-
-    def _update_everything(self) -> None:
-        """Updates all Ranks and guarantees that Players don't get negative
-        Elo.
-        """
-        for i in self.players:
-            i['elo'] = int(i['elo'])
-            if self.rankings:
-                if i['elo'] >= 2400:
-                    i['rank'] = "Grand Master"
-                elif i['elo'] >= 2000:
-                    i['rank'] = "Master"
-                elif i['elo'] >= 1850:
-                    i['rank'] = "Diamond"
-                elif i['elo'] >= 1650:
-                    i['rank'] = "Platinum"
-                elif i['elo'] >= 1500:
-                    i['rank'] = "Gold"
-                elif i['elo'] >= 1300:
-                    i['rank'] = "Silver"
-                elif i['elo'] >= 1100:
-                    i['rank'] = "Bronze"
-                else:
-                    i['rank'] = "Iron"
-            i['elo'] = max(i['elo'], 0)
-
-
-# Inspired by https://github.com/HankSheehan/EloPy
+            player_a.wins += 1
+            player_b.losses += 1
+            self.add_elo(winner, int(self.k_factor * (0.5 - expected_score_a)))
+            self.add_elo(loser, int(self.k_factor * (0.5 - expected_score_b)))
