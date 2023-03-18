@@ -38,9 +38,9 @@ dependencies = ["black", "flake8", "isort", "mypy", "pydocstyle", "pylint"]
 
 [tool.hatch.envs.lint.scripts]
 format = [
-    "pylint elo_system tests",
+    "pylint elo_system",
     "flake8 elo_system tests",
-    "mypy elo_system tests",
+    "mypy elo_system",
     "black elo_system tests",
     "isort elo_system tests",
     "pydocstyle elo_system",

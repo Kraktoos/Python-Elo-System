@@ -7,7 +7,7 @@ Originally created by Kraktoos on 10/20/2021.
 Rewritten by Samuel Wu on 03/15/2023.
 """
 
-from typing import Optional, Union
+from typing import Dict, List, Optional, Union
 
 from elo_system.player import Player
 
@@ -34,7 +34,7 @@ class EloSystem:
         """
         self.base_elo = base_elo
         self.k_factor = k_factor
-        self.players: dict[str, Player] = {}
+        self.players: Dict[str, Player] = {}
         self.rankings = rankings
 
     # Player Methods
@@ -136,7 +136,6 @@ class EloSystem:
         turned off.
         :rtype: Optional[str]
         """
-
         return self.players[player].rank
 
     def get_player_wins(self, player: str) -> int:
@@ -178,22 +177,23 @@ class EloSystem:
         return len(self.players)
 
     # Return List Methods
-    def get_overall_list(self) -> list[dict[str, Union[int, str]]]:
+
+    def get_overall_list(self) -> List[Dict[str, Union[int, str]]]:
         """Get the statistic of all players in the system.
 
         :return: List of all the players with their statistics.
         :rtype: list[dict[str, Union[int, str]]]
         """
-        players: list[dict[str, Union[int, str]]] = []
+        players: List[Dict[str, Union[int, str]]] = []
 
         for key, val in self.players.items():
-            dictionary: dict[str, Union[int, str]] = {"player": key}
+            dictionary: Dict[str, Union[int, str]] = {"player": key}
             dictionary.update(val.asdict())
             players.append(dictionary)
 
         return sorted(players, key=lambda d: d["elo"], reverse=True)
 
-    def get_players_with_elo(self, elo: int) -> list[str]:
+    def get_players_with_elo(self, elo: int) -> List[str]:
         """Get all players with an exact rating.
 
         :param elo: The rating to search from.
@@ -203,7 +203,7 @@ class EloSystem:
         """
         return [key for key, val in self.players.items() if val.elo == elo]
 
-    def get_players_with_rank(self, rank: str) -> list[str]:
+    def get_players_with_rank(self, rank: str) -> List[str]:
         """Get all players with a rank.
 
         :param rank: The rank to search from.
@@ -213,7 +213,7 @@ class EloSystem:
         """
         return [key for key, val in self.players.items() if val.rank == rank]
 
-    def get_players_with_wins(self, wins: int) -> list[str]:
+    def get_players_with_wins(self, wins: int) -> List[str]:
         """Get all players with an exact number of wins.
 
         :param wins: The number of wins to search from.
@@ -223,7 +223,7 @@ class EloSystem:
         """
         return [key for key, val in self.players.items() if val.wins == wins]
 
-    def get_players_with_losses(self, losses: int) -> list[str]:
+    def get_players_with_losses(self, losses: int) -> List[str]:
         """Get all players with an exact number of losses.
 
         :param losses: The number of losses to search from.
@@ -235,7 +235,7 @@ class EloSystem:
             key for key, val in self.players.items() if val.losses == losses
         ]
 
-    def get_players_with_draws(self, draws: int) -> list[str]:
+    def get_players_with_draws(self, draws: int) -> List[str]:
         """Get all players with an exact number of draws.
 
         :param draws: The number of draws to search from.
