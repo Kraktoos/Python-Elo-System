@@ -7,7 +7,7 @@ Originally created by Kraktoos on 10/20/2021.
 Rewritten by Samuel Wu on 03/15/2023.
 """
 
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 
 from elo_system.player import Player
 
@@ -178,16 +178,16 @@ class EloSystem:
 
     # Return List Methods
 
-    def get_overall_list(self) -> List[Dict[str, Union[int, str]]]:
+    def get_overall_list(self) -> List[Dict[str, int | str]]:
         """Get the statistic of all players in the system.
 
         :return: List of all the players with their statistics.
-        :rtype: list[dict[str, Union[int, str]]]
+        :rtype: list[dict[str, int | str]]
         """
-        players: List[Dict[str, Union[int, str]]] = []
+        players: List[Dict[str, int | str]] = []
 
         for key, val in self.players.items():
-            dictionary: Dict[str, Union[int, str]] = {"player": key}
+            dictionary: Dict[str, int | str] = {"player": key}
             dictionary.update(val.asdict())
             players.append(dictionary)
 

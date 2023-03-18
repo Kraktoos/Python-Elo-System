@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 """Created by Samuel Wu on 03/15/2023."""
 
-from typing import Dict, Optional, Union
+from typing import Dict, Optional
 
 
 class Player:
@@ -40,13 +40,13 @@ class Player:
         else:
             self.rank = "Iron"
 
-    def asdict(self) -> Dict[str, Union[int, str]]:
+    def asdict(self) -> Dict[str, int | str]:
         """Store the statistics of a player as a dictionary.
 
         :return: The statistics of a player as a dictionary.
-        :rtype: dict[str, Union[int, str]]
+        :rtype: dict[str, int | str]
         """
-        dictionary: Dict[str, Union[int, str]] = {
+        dictionary: Dict[str, int | str] = {
             "elo": self.elo,
             "wins": self.wins,
             "losses": self.losses,
