@@ -21,13 +21,13 @@ Add the package by using the url pointing to the python subdirectory.
 Npm:
 
 ```bash
-npm install -D 'https://gitpkg.now.sh/TwoPizza9621536/Elo-System/typescript?main'
+npm install 'https://gitpkg.now.sh/TwoPizza9621536/Elo-System/typescript?main'
 ```
 
 Yarn:
 
 ```bash
-yarn add -D 'https://gitpkg.now.sh/TwoPizza9621536/Elo-System/typescript?main'
+yarn add 'https://gitpkg.now.sh/TwoPizza9621536/Elo-System/typescript?main'
 ```
 
 Links are provided by [GitPkg](https://gitpkg.vercel.app/).
