@@ -1,5 +1,37 @@
 # Elo Rating System
 
+Another implementation of the Elo rating system for Python and
+TypeScript/JavaScript, originally created by Kraktoos.
+
+## Installation
+
+### Python
+
+Pip in a virtual environment:
+
+```bash
+pip install "git+https://github.com/TwoPizza9621536/Elo-System/#subdirectory=python"
+```
+
+If you are using a packing and dependency manager like poetry, hatch, pdm, etc.
+Add the package by using the url pointing to the python subdirectory.
+
+### TypeScrypt/JavaScript
+
+Npm:
+
+```bash
+npm install -D 'https://gitpkg.now.sh/TwoPizza9621536/Elo-System/typescript?main'
+```
+
+Yarn:
+
+```bash
+yarn add -D 'https://gitpkg.now.sh/TwoPizza9621536/Elo-System/typescript?main'
+```
+
+Links are provided by [GitPkg](https://gitpkg.vercel.app/).
+
 ## Snippet of the Original Readme
 
 Yet another Python Implementation of the Elo rating system (how innovative am I
