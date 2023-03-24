@@ -61,7 +61,7 @@ print(elo.get_overall_list())
 elo.add_player("John")
 elo.add_player("Marcus", 2400)
 elo.add_player("James", 1000)
-# There is also set_elo(), reset_elo(), add_elo() and remove_elo()
+# There is also set_elo(), reset_elo(), add_elo(), remove_elo(), and get_wins(), etc...
 print(elo.get_overall_list())
 print(elo.get_player_elo("John"))
 print(elo.get_player_rank("Marcus"))

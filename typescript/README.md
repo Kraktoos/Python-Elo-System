@@ -9,7 +9,7 @@ TypeScript/Javascript with improvements from the python fork.
 
 ```javascript
 import EloSystem from "elo_system"
-elo = EloSystem(base_elo = 1000, k = 32) // Base values for base_elo and k and has support for rankings
+elo = EloSystem({base_elo = 1000, k = 32}) // Base values for base_elo and k and has support for rankings
 ```
 
 ### Adding and Removing Players
@@ -54,7 +54,7 @@ console.log(elo.get_overall_list())
 elo.add_player("John")
 elo.add_player("Marcus", 2400)
 elo.add_player("James", 1000)
-// There is also set_elo(), reset_elo(), add_elo(), remove_elo(), and get_wins() etc...
+// There is also set_elo(), reset_elo(), add_elo(), remove_elo(), and get_wins(), etc...
 console.log(elo.get_overall_list())
 console.log(elo.get_player_elo("John"))
 console.log(elo.get_player_rank("Marcus"))

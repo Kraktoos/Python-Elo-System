@@ -18,17 +18,13 @@ Add the package by using the url pointing to the python subdirectory.
 
 ### TypeScrypt/JavaScript
 
-Npm:
+Add the following code to the dependencies of the package.json.
 
-```bash
-npm install 'https://gitpkg.now.sh/TwoPizza9621536/Elo-System/typescript?main'
+```json
+"elo-system": "https://gitpkg.now.sh/TwoPizza9621536/Elo-System/typescript?main&scripts.postinstall=npm%20install%20--ignore-scripts%20%26%26%20npm%20run%20build"
 ```
 
-Yarn:
-
-```bash
-yarn add 'https://gitpkg.now.sh/TwoPizza9621536/Elo-System/typescript?main'
-```
+then run `npm/yarn install`.
 
 Links are provided by [GitPkg](https://gitpkg.vercel.app/).
 
