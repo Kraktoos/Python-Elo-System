@@ -1,14 +1,6 @@
-import Player from './player'
+import Player, { type PlayerStatistics } from './player'
 
 interface MatchRecord { winner: string, loser: string, draw: boolean }
-
-interface PlayerStatistics {
-  elo: number
-  wins: number
-  losses: number
-  draws: number
-  player: string
-}
 
 export type PlayerList = PlayerStatistics[]
 
@@ -91,9 +83,14 @@ export default class EloSystem {
   /* Return List Methods */
 
   get_overall_list (): PlayerList {
-    return Object.entries(this.players).map((player: [string, Player]) => {
-      return { player: player[0], ...player[1].as_dict() }
-    }).sort((a: PlayerStatistics, b: PlayerStatistics) => b.elo - a.elo)
+    const players: PlayerStatistics[] = []
+    this.players.forEach((stats: Player, player: string) => {
+      players.push({ player, ...stats })
+    })
+
+    return players.sort(
+      (a: PlayerStatistics, b: PlayerStatistics) => b.elo - a.elo
+    )
   }
 
   get_players_with_elo (elo: number): string[] {
