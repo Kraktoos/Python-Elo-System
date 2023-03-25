@@ -2,7 +2,7 @@ import Player from './player'
 
 interface MatchRecord { winner: string, loser: string, draw: boolean }
 
-type PlayerStatistics = {
+interface PlayerStatistics {
   elo: number
   wins: number
   losses: number
@@ -10,83 +10,82 @@ type PlayerStatistics = {
   player: string
 }
 
-export type PlayerList = Array<PlayerStatistics>
+export type PlayerList = PlayerStatistics[]
 
 export default class EloSystem {
   base_elo: number
   k_factor: number
   rankings: boolean
-  players: Record<string, Player>
+  players: Map<string, Player>
 
   constructor (baseElo = 1000, kFactor = 32, { rankings = false } = {}) {
     this.base_elo = baseElo
     this.k_factor = kFactor
     this.rankings = rankings
-    this.players = {}
+    this.players = new Map<string, Player>()
   }
 
   /* Player Methods */
 
   add_player (player: string, elo?: number): void {
-    if (elo == null) elo = this.base_elo
+    if (elo === undefined) elo = this.base_elo
 
-    this.players[player] = new Player(elo)
+    this.players.set(player, new Player(elo))
 
-    if (this.rankings) this.players[player].calculate_rank()
+    if (this.rankings) this.players.get(player)!.calculate_rank()
   }
 
   remove_player (player: string): void {
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete this.players[player]
+    this.players.delete(player)
   }
 
   /* Elo Methods */
 
   set_elo (player: string, elo: number): void {
-    this.players[player].elo = elo
+    this.players.get(player)!.elo = elo
 
-    if (this.rankings) this.players[player].calculate_rank()
+    if (this.rankings) this.players.get(player)!.calculate_rank()
   }
 
   reset_elo (player: string): void {
-    this.players[player].elo = this.base_elo
+    this.players.get(player)!.elo = this.base_elo
   }
 
   add_elo (player: string, elo: number): void {
-    this.players[player].elo += elo
+    this.players.get(player)!.elo += elo
 
-    if (this.rankings) this.players[player].calculate_rank()
+    if (this.rankings) this.players.get(player)!.calculate_rank()
   }
 
   remove_elo (player: string, elo: number): void {
-    this.players[player].elo -= elo
+    this.players.get(player)!.elo -= elo
 
-    if (this.rankings) this.players[player].calculate_rank()
+    if (this.rankings) this.players.get(player)!.calculate_rank()
   }
 
   /* Return Methods */
   get_player_elo (player: string): number {
-    return this.players[player].elo
+    return this.players.get(player)!.elo
   }
 
   get_player_rank (player: string): string | undefined {
-    return this.players[player].rank
+    return this.players.get(player)!.rank
   }
 
   get_player_wins (player: string): number {
-    return this.players[player].wins
+    return this.players.get(player)!.wins
   }
 
   get_player_losses (player: string): number {
-    return this.players[player].losses
+    return this.players.get(player)!.losses
   }
 
   get_player_draws (player: string): number {
-    return this.players[player].draws
+    return this.players.get(player)!.draws
   }
 
   get_player_count (): number {
-    return Object.keys(this.players).length
+    return this.players.size
   }
 
   /* Return List Methods */
@@ -98,60 +97,60 @@ export default class EloSystem {
   }
 
   get_players_with_elo (elo: number): string[] {
-    const players = []
-    for (const [player, stats] of Object.entries(this.players)) {
+    const players: string[] = []
+    this.players.forEach((stats: Player, player: string) => {
       if (stats.elo === elo) {
         players.push(player)
       }
-    }
+    })
     return players
   }
 
   get_players_with_rank (rank: string): string[] {
-    const players = []
-    for (const [player, stats] of Object.entries(this.players)) {
+    const players: string[] = []
+    this.players.forEach((stats: Player, player: string) => {
       if (stats.rank === rank) {
         players.push(player)
       }
-    }
+    })
     return players
   }
 
   get_players_with_wins (wins: number): string[] {
-    const players = []
-    for (const [player, stats] of Object.entries(this.players)) {
+    const players: string[] = []
+    this.players.forEach((stats: Player, player: string) => {
       if (stats.wins === wins) {
         players.push(player)
       }
-    }
+    })
     return players
   }
 
   get_players_with_losses (losses: number): string[] {
-    const players = []
-    for (const [player, stats] of Object.entries(this.players)) {
+    const players: string[] = []
+    this.players.forEach((stats: Player, player: string) => {
       if (stats.losses === losses) {
         players.push(player)
       }
-    }
+    })
     return players
   }
 
   get_players_with_draws (draws: number): string[] {
-    const players = []
-    for (const [player, stats] of Object.entries(this.players)) {
+    const players: string[] = []
+    this.players.forEach((stats: Player, player: string) => {
       if (stats.draws === draws) {
         players.push(player)
       }
-    }
+    })
     return players
   }
 
   /* Main Matching System */
 
   record_match ({ winner, loser, draw = false }: MatchRecord): void {
-    const playerA = this.players[winner]
-    const playerB = this.players[loser]
+    const playerA = this.players.get(winner)!
+    const playerB = this.players.get(loser)!
 
     const ratingsA = 10 ** (playerA.elo / 400)
     const ratingsB = 10 ** (playerB.elo / 400)

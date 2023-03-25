@@ -1,6 +1,6 @@
 {
   "name": "js-elo-system",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A port of Python-Elo-System originally by Kraktoos",
   "source": "src/elo_system.ts",
   "main": "dist/elo_system.js",
