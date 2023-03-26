@@ -2,7 +2,7 @@ import Player, { type PlayerStatistics } from './player'
 
 interface MatchRecord { winner: string, loser: string, draw: boolean }
 
-export type PlayerList = PlayerStatistics[]
+export type OverallStatistics = PlayerStatistics[]
 
 export default class EloSystem {
   base_elo: number
@@ -82,7 +82,7 @@ export default class EloSystem {
 
   /* Return List Methods */
 
-  get_overall_list (): PlayerList {
+  get_overall_list (): OverallStatistics {
     const players: PlayerStatistics[] = []
     this.players.forEach((stats: Player, player: string) => {
       players.push({ player, ...stats })
