@@ -66,7 +66,7 @@ def test_get_methods(example_system: EloSystem):
     assert example_system.get_player_wins("Alice") == 1
     assert example_system.get_player_losses("Alice") == 1
     assert example_system.get_player_draws("Alice") == 1
-    assert example_system.get_players_with_elo(1038) == ["Alice"]
+    assert example_system.get_players_with_elo(1037) == ["Alice"]
     assert example_system.get_players_with_wins(1) == ["Alice", "Bob"]
     assert example_system.get_players_with_losses(1) == ["Alice", "Bob"]
     assert example_system.get_players_with_draws(1) == ["Alice", "Bob"]

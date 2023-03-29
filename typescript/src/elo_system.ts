@@ -1,6 +1,6 @@
 import Player, { type PlayerStatistics } from './player'
 
-interface MatchRecord { winner: string, loser: string, draw: boolean }
+interface MatchRecord { winner: string, loser: string, draw?: boolean }
 
 export type OverallStatistics = PlayerStatistics[]
 
@@ -10,7 +10,7 @@ export default class EloSystem {
   rankings: boolean
   players: Map<string, Player>
 
-  constructor (baseElo = 1000, kFactor = 32, { rankings = false } = {}) {
+  constructor ({ baseElo = 1000, kFactor = 32, rankings = false } = {}) {
     this.base_elo = baseElo
     this.k_factor = kFactor
     this.rankings = rankings
@@ -41,6 +41,8 @@ export default class EloSystem {
 
   reset_elo (player: string): void {
     this.players.get(player)!.elo = this.base_elo
+
+    if (this.rankings) this.players.get(player)!.calculate_rank()
   }
 
   add_elo (player: string, elo: number): void {
@@ -157,13 +159,16 @@ export default class EloSystem {
     if (draw) {
       playerA.draws += 1
       playerB.draws += 1
-      this.add_elo(winner, Math.floor(this.k_factor * (0.5 - expectedScoreA)))
-      this.add_elo(loser, Math.floor(this.k_factor * (0.5 - expectedScoreB)))
+      playerA.elo += Math.floor(this.k_factor * (0.5 - expectedScoreA))
+      playerB.elo += Math.floor(this.k_factor * (0.5 - expectedScoreB))
     } else {
       playerA.wins += 1
       playerB.losses += 1
-      this.add_elo(winner, Math.floor(this.k_factor * (1 - expectedScoreA)))
-      this.add_elo(loser, Math.floor(this.k_factor * (0 - expectedScoreB)))
+      playerA.elo += Math.floor(this.k_factor * (1 - expectedScoreA))
+      playerB.elo += Math.floor(this.k_factor * (0 - expectedScoreB))
     }
+
+    playerA.elo = Math.max(playerA.elo, 0)
+    playerB.elo = Math.max(playerB.elo, 0)
   }
 }

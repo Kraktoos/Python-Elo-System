@@ -7,6 +7,7 @@ Originally created by Kraktoos on 10/20/2021.
 Rewritten by Samuel Wu on 03/15/2023.
 """
 
+from math import floor
 from typing import Dict, List, Optional
 
 from elo_system.player import Player
@@ -270,10 +271,13 @@ class EloSystem:
         if draw:
             player_a.draws += 1
             player_b.draws += 1
-            self.add_elo(winner, int(self.k_factor * (0.5 - expected_score_a)))
-            self.add_elo(loser, int(self.k_factor * (0.5 - expected_score_b)))
+            player_a.elo += floor(self.k_factor * (0.5 - expected_score_a))
+            player_b.elo += floor(self.k_factor * (0.5 - expected_score_b))
         else:
             player_a.wins += 1
             player_b.losses += 1
-            self.add_elo(winner, int(self.k_factor * (1 - expected_score_a)))
-            self.add_elo(loser, int(self.k_factor * (0 - expected_score_b)))
+            player_a.elo += floor(self.k_factor * (1 - expected_score_a))
+            player_b.elo += floor(self.k_factor * (0 - expected_score_b))
+
+        player_a.elo = max(player_a.elo, 0)
+        player_b.elo = max(player_b.elo, 0)
