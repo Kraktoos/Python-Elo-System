@@ -11,6 +11,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "@typescript-eslint/consistent-type-definitions": "type",
     "@typescript-eslint/no-non-null-assertion": "off"
   }
 }

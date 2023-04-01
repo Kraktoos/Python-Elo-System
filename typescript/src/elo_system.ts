@@ -1,6 +1,6 @@
 import Player, { type PlayerStatistics } from './player'
 
-interface MatchRecord { winner: string, loser: string, draw?: boolean }
+type MatchRecord = { winner: string, loser: string, draw?: boolean }
 
 export type OverallStatistics = PlayerStatistics[]
 
