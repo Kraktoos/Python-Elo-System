@@ -1,4 +1,4 @@
-export interface PlayerStatistics {
+export type PlayerStatistics = {
   player?: string
   elo: number
   wins: number
