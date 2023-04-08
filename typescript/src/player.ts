@@ -1,3 +1,8 @@
+/*! SPDX-FileCopyrightText: 2023 Samuel Wu
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 export type PlayerStatistics = {
   player?: string
   elo: number

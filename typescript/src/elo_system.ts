@@ -1,9 +1,13 @@
+/*! SPDX-FileCopyrightText: 2023 Samuel Wu
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
 import Player, { type PlayerStatistics } from './player'
 
 export type MatchRecord = { winner: string, loser: string, draw?: boolean }
 
 export type OverallStatistics = PlayerStatistics[]
-
 export default class EloSystem {
   base_elo: number
   k_factor: number
