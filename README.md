@@ -10,23 +10,16 @@ TypeScript/JavaScript, originally created by Kraktoos.
 Pip in a virtual environment:
 
 ```bash
-pip install "git+https://github.com/TwoPizza9621536/Elo-System/#subdirectory=python"
+pip install Python-Elo-System
 ```
 
-If you are using a packing and dependency manager like poetry, hatch, pdm, etc.
-Add the package by using the url pointing to the python subdirectory.
+If you are using a packing and dependency manager like poetry, hatch, pdm, etc,
+add `Python-Elo-System` as a dependency.
 
 ### TypeScrypt/JavaScript
 
-Add the following code to the dependencies of the package.json.
-
-```json
-"elo-system": "https://gitpkg.now.sh/TwoPizza9621536/Elo-System/typescript?main&scripts.postinstall=npm%20install%20--ignore-scripts%20%26%26%20npm%20run%20build"
-```
-
-then run `npm/yarn install`.
-
-Links are provided by [GitPkg](https://gitpkg.vercel.app/).
+Run `yarn add js-elo-system` or `npm install js-elo-system` for yarn and npm
+respectively.
 
 ## Snippet of the Original Readme
 
