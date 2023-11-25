@@ -1,6 +1,6 @@
 {
   "name": "js-elo-system",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "A port of Python-Elo-System originally by Kraktoos",
   "source": "src/elo_system.ts",
   "main": "dist/elo_system.js",
@@ -27,6 +27,7 @@
   "scripts": {
     "build": "parcel build",
     "watch": "parcel watch",
+    "lint": "eslint .",
     "test": "jest"
   },
   "repository": {

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-export type PlayerStatistics = {
+export interface PlayerStatistics {
   player?: string
   elo: number
   wins: number
