@@ -19,14 +19,14 @@ export default class Player implements PlayerStatistics {
   draws: number
   rank?: string
 
-  constructor (elo: number) {
+  constructor(elo: number) {
     this.elo = elo
     this.wins = 0
     this.losses = 0
     this.draws = 0
   }
 
-  calculate_rank (): void {
+  calculate_rank() {
     if (this.elo >= 2400) {
       this.rank = 'Grand Master'
     } else if (this.elo >= 2000) {

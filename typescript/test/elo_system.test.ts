@@ -17,15 +17,15 @@ describe('Elo System without Ranking', () => {
         elo: 1400,
         wins: 0,
         losses: 0,
-        draws: 0
+        draws: 0,
       },
       {
         player: 'Alice',
         elo: 1000,
         wins: 0,
         losses: 0,
-        draws: 0
-      }
+        draws: 0,
+      },
     ])
 
     exampleSystem.remove_player('Bob')
@@ -36,8 +36,8 @@ describe('Elo System without Ranking', () => {
         elo: 1000,
         wins: 0,
         losses: 0,
-        draws: 0
-      }
+        draws: 0,
+      },
     ])
   })
 

@@ -17,8 +17,8 @@ describe('Elo System with Ranking', () => {
         wins: 0,
         losses: 0,
         draws: 0,
-        rank: 'Iron'
-      }
+        rank: 'Iron',
+      },
     ])
   })
 
@@ -42,7 +42,7 @@ describe('Elo System with Ranking', () => {
     { elo: 1650, rank: 'Platinum' },
     { elo: 1850, rank: 'Diamond' },
     { elo: 2000, rank: 'Master' },
-    { elo: 2400, rank: 'Grand Master' }
+    { elo: 2400, rank: 'Grand Master' },
   ]
   it.each(cases)('All Ranks', ({ elo, rank }) => {
     rankedSystem.set_elo('Alice', elo)
