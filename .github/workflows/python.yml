@@ -1,11 +1,16 @@
 name: Python Tests
 
 on:
-    push:
-        branches: [main]
-        paths: python
-    pull_request:
-        paths: python
+  push:
+    branches: [main]
+    paths: python
+  pull_request:
+    paths: python
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./python
 
 jobs:
   test:
