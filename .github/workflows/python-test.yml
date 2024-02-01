@@ -1,0 +1,38 @@
+name: Test Python Package
+
+on:
+  push:
+    branches: [main]
+    paths: 'python/**'
+  pull_request:
+    paths: 'python/**'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./python
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          pdm sync -d -G test
+
+      - name: Run Tests
+        run: |
+          pdm run tox --version
+          pyversion="${{ matrix.python-version }}"
+          pdm run -v tox -e py${pyversion/./}

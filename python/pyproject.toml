@@ -4,17 +4,22 @@ build-backend = "pdm.backend"
 
 [project]
 name = "python-elo-system"
-description = "Yet another Python Implementation of the Elo rating system."
 version = "3.0.0"
+dependencies = ["attrs>=23.2.0"]
 requires-python = ">=3.10"
-authors = [
-    { name = "Kraktoos", email = "kraktoos@gmail.com" },
-    { name = "Samuel Wu", email = "twopizza9621536@gmail.com" },
-]
+authors = [{ name = "Kraktoos", email = "kraktoos@gmail.com" }]
+maintainers = [{ name = "Samuel Wu", email = "twopizza9621536@gmail.com" }]
+description = "Yet another Python Implementation of the Elo rating system."
 readme = "README.md"
 license = { text = "MIT" }
-classifiers = ["Programming Language :: Python"]
-dependencies = ["attrs>=23.2.0"]
+keywords = ["elo"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
 
 [project.urls]
 Documentation = "https://github.com/TwoPizza9621536/python-elo-system#readme"

@@ -39,16 +39,15 @@ elo = EloSystem(base_elo = 1000, k = 32) # Base values for base_elo and k
 >>> print(elo.get_overall_list())
 [{'player': 'Marcus', 'elo': 1400}, {'player': 'John', 'elo': 1000}]
 
->>> elo.record_match(winner="Marcus", loser="John")
+>>> elo.record_match("Marcus", "John", "Marcus")
 >>> print(elo.get_overall_list())
 [{'player': 'Marcus', 'elo': 1402}, {'player': 'John', 'elo': 997}]
 
->>> elo.record_match(loser="Marcus", winner="John")
+>>> elo.record_match("Marcus", "John", "John")
 >>> print(elo.get_overall_list())
 [{'player': 'Marcus', 'elo': 1372}, {'player': 'John', 'elo': 1026}]
 
-# When draw is passed true, regardless who is the winner, the match is a draw
->>> elo.record_match(winner="Marcus", loser="John", draw=True)
+>>> elo.record_match("Marcus", "John")
 >>> print(elo.get_overall_list())
 [{'player': 'Marcus', 'elo': 1359}, {'player': 'John', 'elo': 1038}]
 ```
@@ -73,3 +72,7 @@ elo = EloSystem(base_elo = 1000, k = 32) # Base values for base_elo and k
 >>> print(elo.get_players_with_elo(1000))
 ['John', 'James']
 ```
+
+## License
+
+This implementation is licensed under the MIT License.
