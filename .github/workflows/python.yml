@@ -8,10 +8,6 @@ on:
     paths: 'python/**'
   workflow_dispatch:
 
-defaults:
-  run:
-    working-directory: ./python
-
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -39,4 +35,4 @@ jobs:
         run: |
           tox --version
           pyversion="${{ matrix.python-version }}"
-          tox -e py${pyversion/./}
+          tox -e py${pyversion/./} --workdir ./python
