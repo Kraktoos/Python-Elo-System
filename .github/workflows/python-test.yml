@@ -26,6 +26,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: true
+          cache-dependency-path: ./python/pdm.lock
 
       - name: Install dependencies
         run: |
