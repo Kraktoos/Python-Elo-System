@@ -53,7 +53,7 @@ indent-width = 4
 docstring-code-format = true
 
 [tool.pyright]
-include = ["elo_system.py", "test_elo_system.py"]
+include = ["elo_system.py"]
 
 pythonVersion = "3.10"
 pythonPlatform = "All"
@@ -62,5 +62,6 @@ pythonPlatform = "All"
 line-length = 79
 
 [tool.isort]
-line_length = 79
 profile = "black"
+atomic = true
+line_length = 79
