@@ -1,76 +1,66 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [project]
-name = "Python-Elo-System"
+name = "python-elo-system"
 description = "Yet another Python Implementation of the Elo rating system."
-version = "2.1.1"
-readme = "README.md"
+version = "3.0.0"
 requires-python = ">=3.10"
-license = "MIT"
-keywords = []
 authors = [
     { name = "Kraktoos", email = "kraktoos@gmail.com" },
     { name = "Samuel Wu", email = "twopizza9621536@gmail.com" },
 ]
+readme = "README.md"
+license = { text = "MIT" }
 classifiers = ["Programming Language :: Python"]
-dependencies = []
+dependencies = ["attrs>=23.2.0"]
 
 [project.urls]
 Documentation = "https://github.com/TwoPizza9621536/python-elo-system#readme"
 Issues = "https://github.com/TwoPizza9621536/python-elo-system/issues"
 Source = "https://github.com/TwoPizza9621536/python-elo-system"
 
-[tool.hatch.envs.default]
-dependencies = ["pytest", "pytest-cov"]
+[tool.pdm]
+distribution = true
 
-[tool.hatch.envs.default.scripts]
-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=elo_system --cov=tests {args}"
-no-cov = "cov --no-cov {args}"
+[tool.pdm.dev-dependencies]
+lint = ["ruff>=0.1.14", "pyright>=1.1.349"]
+fmt = ["isort>=5.13.2", "black>=24.1.1"]
+test = ["pytest>=8.0.0", "pytest-cov>=4.1.0", "tox-pdm>=0.7.2"]
 
-[[tool.hatch.envs.test.matrix]]
-python = ["39", "310", "311"]
+[tool.pdm.scripts]
+lint = { composite = ["ruff check .", "pyright"] }
+fmt = { composite = ["isort .", "black ."] }
 
-[tool.hatch.envs.lint]
-detached = true
-dependencies = ["black", "flake8", "isort", "mypy", "pydocstyle", "pylint"]
-
-[tool.hatch.envs.lint.scripts]
-format = [
-    "pylint elo_system",
-    "flake8 elo_system tests",
-    "mypy elo_system",
-    "black elo_system tests",
-    "isort elo_system tests",
-    "pydocstyle elo_system",
+[tool.pdm.scripts.test]
+cmd = [
+    "pytest",
+    "--cov-report=term-missing",
+    "--cov-report=xml",
+    "--cov=elo_system",
+    "--cov=test_elo_system",
 ]
 
-[tool.coverage.run]
-branch = true
-parallel = true
+[tool.pdm.scripts.all]
+composite = ["lint", "fmt", "test"]
 
-[tool.coverage.report]
-exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+[tool.ruff]
+line-length = 79
+indent-width = 4
 
-[tool.pylint.main]
-py-version = "3.10"
-recursive = true
+[tool.ruff.format]
+docstring-code-format = true
 
-[tool.pylint.format]
-max-line-length = 79
+[tool.pyright]
+include = ["elo_system.py", "test_elo_system.py"]
 
-[tool.autopep8]
-in-place = true
-recursive = true
-aggressive = 3
+pythonVersion = "3.10"
+pythonPlatform = "All"
 
 [tool.black]
 line-length = 79
 
 [tool.isort]
+line_length = 79
 profile = "black"
-
-[tool.pydocstyle]
-convention = "pep257"
-add-ignore = "D104,D205"

@@ -3,12 +3,9 @@
 This is a fork of Python Implementation - Elo Rating System by Kraktoos and adds
 the following features:
 
-- Ranks can be turned on or off.
+- Ranks has been removed.
 - Win, lose and draw counts.
-- Uses hatch instead of setup.py for packaging.
-- Rewritten to use a player class instead of a dictionary to store statistics.
-- Use a dictionary as a record for players and statistics instead of a list.
-- Use argument keywords to set winner, loser and draws.
+- Rewritten to use a player class to store statistics.
 
 ## Examples
 
@@ -16,65 +13,63 @@ the following features:
 
 ```python
 from elo_system import EloSystem
-elo = EloSystem(base_elo = 1000, k = 32) # Base values for base_elo and k and has support for rankings
+elo = EloSystem(base_elo = 1000, k = 32) # Base values for base_elo and k
 ```
 
 ### Adding and Removing Players
 
 ```python
-elo.add_player("John")
-elo.add_player("Marcus", 1400)
-print(elo.get_overall_list())
-elo.remove_player("Marcus")
-print(elo.get_overall_list())
-```
+# Adding players
+>>> elo.add_player("John")
+>>> elo.add_player("Marcus", 1400)
+>>> print(elo.get_overall_list())
+[{'player': 'Marcus', 'elo': 1400}, {'player': 'John', 'elo': 1000}]
 
-```bash
-[{'player': 'Marcus', 'elo': 1400, 'rank': 'Silver'}, {'player': 'John', 'elo': 1000, 'rank': 'Iron'}]
-[{'player': 'John', 'elo': 1000, 'rank': 'Iron'}]
+# Removing Players
+>>> elo.remove_player("Marcus")
+>>> print(elo.get_overall_list())
+[{'player': 'John', 'elo': 1000}]
 ```
 
 ### Recording a Match
 
 ```python
-elo.add_player("John")
-elo.add_player("Marcus", 1400)
-print(elo.get_overall_list())
-elo.record_match(winner="Marcus", loser="John")
-print(elo.get_overall_list())
-elo.record_match(loser="Marcus", winner="John")
-print(elo.get_overall_list())
-elo.record_match(winner="Marcus", loser="John", draw=True) # When draw is passed true, regardless who is the winner, the match is a draw
-print(elo.get_overall_list())
-```
+>>> elo.add_player("John")
+>>> elo.add_player("Marcus", 1400)
+>>> print(elo.get_overall_list())
+[{'player': 'Marcus', 'elo': 1400}, {'player': 'John', 'elo': 1000}]
 
-```bash
-[{'player': 'Marcus', 'elo': 1400, 'rank': 'Silver'}, {'player': 'John', 'elo': 1000, 'rank': 'Iron'}]
-[{'player': 'Marcus', 'elo': 1402, 'rank': 'Silver'}, {'player': 'John', 'elo': 997, 'rank': 'Iron'}]
-[{'player': 'Marcus', 'elo': 1372, 'rank': 'Silver'}, {'player': 'John', 'elo': 1026, 'rank': 'Iron'}]
-[{'player': 'Marcus', 'elo': 1359, 'rank': 'Silver'}, {'player': 'John', 'elo': 1038, 'rank': 'Iron'}]
+>>> elo.record_match(winner="Marcus", loser="John")
+>>> print(elo.get_overall_list())
+[{'player': 'Marcus', 'elo': 1402}, {'player': 'John', 'elo': 997}]
+
+>>> elo.record_match(loser="Marcus", winner="John")
+>>> print(elo.get_overall_list())
+[{'player': 'Marcus', 'elo': 1372}, {'player': 'John', 'elo': 1026}]
+
+# When draw is passed true, regardless who is the winner, the match is a draw
+>>> elo.record_match(winner="Marcus", loser="John", draw=True)
+>>> print(elo.get_overall_list())
+[{'player': 'Marcus', 'elo': 1359}, {'player': 'John', 'elo': 1038}]
 ```
 
 ### Other Useful Methods
 
 ```python
-elo.add_player("John")
-elo.add_player("Marcus", 2400)
-elo.add_player("James", 1000)
-# There is also set_elo(), reset_elo(), add_elo(), remove_elo(), and get_wins(), etc...
-print(elo.get_overall_list())
-print(elo.get_player_elo("John"))
-print(elo.get_player_rank("Marcus"))
-print(elo.get_player_count())
-print(elo.get_players_with_elo(1000))
-print(elo.get_players_with_rank("Silver"))
-```
+>>> elo.add_player("John")
+>>> elo.add_player("Marcus", 2400)
+>>> elo.add_player("James", 1000)
 
-```bash
-[{'player': 'Marcus', 'elo': 2400, 'rank': 'Grand Master'}, {'player': 'John', 'elo': 1000, 'rank': 'Iron'}, {'player': 'James', 'elo': 1000, 'rank': 'Iron'}]
+# There is also set_elo(), reset_elo(), add_elo(), remove_elo(), and get_wins(), etc...
+>>> print(elo.get_overall_list())
+[{'player': 'Marcus', 'elo': 2400}, {'player': 'John', 'elo': 1000}, {'player': 'James', 'elo': 1000}]
+
+>>> print(elo.get_player_elo("John"))
 1000
-Grand Master
+
+>>> print(elo.get_player_count())
 3
+
+>>> print(elo.get_players_with_elo(1000))
 ['John', 'James']
-[]
 ```
