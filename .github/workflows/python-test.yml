@@ -35,5 +35,4 @@ jobs:
       - name: Run Tests
         run: |
           pdm run tox --version
-          pyversion="${{ matrix.python-version }}"
-          pdm run -v tox -e py${pyversion/./}
+          pdm run -v tox -e py${{ matrix.python-version }}
