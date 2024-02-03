@@ -1,0 +1,52 @@
+name: Publish Python Package
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: ./python
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: true
+          cache-dependency-path: ./python/pdm.lock
+
+      - name: Install dependencies
+        run: |
+          pdm sync -d -G test
+
+      - name: Run Tests
+        run: |
+          pdm run tox --version
+          pdm run -v tox -e py${{ matrix.python-version }}
+
+  pypi-publish:
+    name: Upload release to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment: python-release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          python-version: '3.10'
+          architecture: x64
+
+      - name: Publish package distributions to PyPI
+        run: pdm publish
