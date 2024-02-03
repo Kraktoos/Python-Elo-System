@@ -23,12 +23,12 @@ elo = EloSystem(base_elo = 1000, k = 32) # Base values for base_elo and k
 >>> elo.add_player("John")
 >>> elo.add_player("Marcus", 1400)
 >>> print(elo.get_overall_list())
-[{'player': 'Marcus', 'elo': 1400}, {'player': 'John', 'elo': 1000}]
+[{'name': 'Marcus', 'elo': 1400}, {'name': 'John', 'elo': 1000}]
 
 # Removing Players
 >>> elo.remove_player("Marcus")
 >>> print(elo.get_overall_list())
-[{'player': 'John', 'elo': 1000}]
+[{'name': 'John', 'elo': 1000}]
 ```
 
 ### Recording a Match
@@ -37,19 +37,19 @@ elo = EloSystem(base_elo = 1000, k = 32) # Base values for base_elo and k
 >>> elo.add_player("John")
 >>> elo.add_player("Marcus", 1400)
 >>> print(elo.get_overall_list())
-[{'player': 'Marcus', 'elo': 1400}, {'player': 'John', 'elo': 1000}]
+[{'name': 'Marcus', 'elo': 1400}, {'name': 'John', 'elo': 1000}]
 
 >>> elo.record_match("Marcus", "John", "Marcus")
 >>> print(elo.get_overall_list())
-[{'player': 'Marcus', 'elo': 1402}, {'player': 'John', 'elo': 997}]
+[{'name': 'Marcus', 'elo': 1402}, {'name': 'John', 'elo': 997}]
 
 >>> elo.record_match("Marcus", "John", "John")
 >>> print(elo.get_overall_list())
-[{'player': 'Marcus', 'elo': 1372}, {'player': 'John', 'elo': 1026}]
+[{'name': 'Marcus', 'elo': 1372}, {'name': 'John', 'elo': 1026}]
 
 >>> elo.record_match("Marcus", "John")
 >>> print(elo.get_overall_list())
-[{'player': 'Marcus', 'elo': 1359}, {'player': 'John', 'elo': 1038}]
+[{'name': 'Marcus', 'elo': 1359}, {'name': 'John', 'elo': 1038}]
 ```
 
 ### Other Useful Methods
@@ -61,7 +61,7 @@ elo = EloSystem(base_elo = 1000, k = 32) # Base values for base_elo and k
 
 # There is also set_elo(), reset_elo(), add_elo(), remove_elo(), and get_wins(), etc...
 >>> print(elo.get_overall_list())
-[{'player': 'Marcus', 'elo': 2400}, {'player': 'John', 'elo': 1000}, {'player': 'James', 'elo': 1000}]
+[{'name': 'Marcus', 'elo': 2400}, {'name': 'John', 'elo': 1000}, {'name': 'James', 'elo': 1000}]
 
 >>> print(elo.get_player_elo("John"))
 1000
