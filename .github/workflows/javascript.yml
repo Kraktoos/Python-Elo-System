@@ -15,17 +15,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 16
+          architecture: x64
       - run: npm ci
       - run: npm test
 
   publish-npm:
+    name: Upload release to NPM
     needs: build
     runs-on: ubuntu-latest
+    environment: npm-release
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 16
+          architecture: x64
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run build
