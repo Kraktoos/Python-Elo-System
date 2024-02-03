@@ -1,4 +1,2 @@
-root = false
-
 [*.{j,t}s]
 indent_size = 2

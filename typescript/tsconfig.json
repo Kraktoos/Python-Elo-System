@@ -10,8 +10,14 @@
       "ES2017"
     ],
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "strict": true,
-    "skipLibCheck": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true
   }
 }

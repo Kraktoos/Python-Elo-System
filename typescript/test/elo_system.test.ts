@@ -1,6 +1,6 @@
 import EloSystem from '../src/elo_system'
 
-describe('Elo System without Ranking', () => {
+describe('Testing Elo System', () => {
   let exampleSystem: EloSystem
 
   beforeEach(() => {
@@ -10,29 +10,31 @@ describe('Elo System without Ranking', () => {
     exampleSystem.add_player('Bob', 1400)
   })
 
-  it('Remove Player', () => {
+  it('Add Player', () => {
     expect(exampleSystem.get_overall_list()).toEqual([
       {
-        player: 'Bob',
+        name: 'Bob',
         elo: 1400,
         wins: 0,
         losses: 0,
         draws: 0,
       },
       {
-        player: 'Alice',
+        name: 'Alice',
         elo: 1000,
         wins: 0,
         losses: 0,
         draws: 0,
       },
     ])
+  })
 
+  it('Remove Player', () => {
     exampleSystem.remove_player('Bob')
 
     expect(exampleSystem.get_overall_list()).toEqual([
       {
-        player: 'Alice',
+        name: 'Alice',
         elo: 1000,
         wins: 0,
         losses: 0,
@@ -56,9 +58,9 @@ describe('Elo System without Ranking', () => {
   })
 
   it('Get Methods', () => {
-    exampleSystem.record_match({ winner: 'Alice', loser: 'Bob' })
-    exampleSystem.record_match({ winner: 'Bob', loser: 'Alice' })
-    exampleSystem.record_match({ winner: 'Alice', loser: 'Bob', draw: true })
+    exampleSystem.record_match('Alice', 'Bob', 'Alice')
+    exampleSystem.record_match('Alice', 'Bob', 'Bob')
+    exampleSystem.record_match('Alice', 'Bob')
 
     expect(exampleSystem.get_player_wins('Alice')).toBe(1)
     expect(exampleSystem.get_player_losses('Alice')).toBe(1)
@@ -70,6 +72,48 @@ describe('Elo System without Ranking', () => {
   })
 
   it('Player Count', () => {
-    expect(exampleSystem.get_player_count()).toBe(2)
+    expect(exampleSystem.size).toBe(2)
+  })
+
+  it('Python Error Behavior', () => {
+    expect(() => {
+      exampleSystem.remove_player('Charlie')
+    }).toThrow(Error)
+
+    expect(() => {
+      exampleSystem.set_elo('Charlie', 100)
+    }).toThrow(Error)
+
+    expect(() => {
+      exampleSystem.reset_elo('Charlie')
+    }).toThrow(Error)
+
+    expect(() => {
+      exampleSystem.add_elo('Charlie', 100)
+    }).toThrow(Error)
+
+    expect(() => {
+      exampleSystem.remove_elo('Charlie', 100)
+    }).toThrow(Error)
+
+    expect(() => {
+      exampleSystem.get_player_elo('Charlie')
+    }).toThrow(Error)
+
+    expect(() => {
+      exampleSystem.get_player_wins('Charlie')
+    }).toThrow(Error)
+
+    expect(() => {
+      exampleSystem.get_player_losses('Charlie')
+    }).toThrow(Error)
+
+    expect(() => {
+      exampleSystem.get_player_draws('Charlie')
+    }).toThrow(Error)
+
+    expect(() => {
+      exampleSystem.record_match('Alice', 'Charlie')
+    }).toThrow(Error)
   })
 })

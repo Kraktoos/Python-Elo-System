@@ -1,121 +1,136 @@
-/*! SPDX-FileCopyrightText: 2023 Samuel Wu
- *
- * SPDX-License-Identifier: MIT
- */
-
-import Player, { type PlayerStatistics } from './player'
-
-export interface MatchRecord {
-  winner: string
-  loser: string
-  draw?: boolean
-}
+import Player from './player'
 
 export default class EloSystem {
   base_elo: number
   k_factor: number
-  rankings: boolean
   players: Map<string, Player>
+  size = 0
 
-  constructor({ baseElo = 1000, kFactor = 32, rankings = false } = {}) {
+  constructor(baseElo = 1000, kFactor = 32) {
     this.base_elo = baseElo
     this.k_factor = kFactor
-    this.rankings = rankings
-    this.players = new Map<string, Player>()
+    this.players = new Map()
   }
 
   /* Player Methods */
 
-  add_player(player: string, elo?: number) {
+  add_player(name: string, elo?: number) {
     if (elo === undefined) elo = this.base_elo
 
-    this.players.set(player, new Player(elo))
-
-    if (this.rankings) this.players.get(player)!.calculate_rank()
+    this.players.set(name, new Player(elo))
+    this.size = this.players.size
   }
 
-  remove_player(player: string) {
-    this.players.delete(player)
+  remove_player(name: string) {
+    const hasBeenDeleted = this.players.delete(name)
+
+    if (!hasBeenDeleted) {
+      throw Error(`KeyError: '${name}'`)
+    }
+
+    this.size = this.players.size
   }
 
   /* Elo Methods */
 
-  set_elo(player: string, elo: number) {
-    this.players.get(player)!.elo = elo
+  set_elo(name: string, elo: number) {
+    const player = this.players.get(name)
 
-    if (this.rankings) this.players.get(player)!.calculate_rank()
+    if (!player) {
+      throw Error(`KeyError: '${name}'`)
+    }
+
+    player.elo = elo
   }
 
-  reset_elo(player: string) {
-    this.players.get(player)!.elo = this.base_elo
+  reset_elo(name: string) {
+    const player = this.players.get(name)
 
-    if (this.rankings) this.players.get(player)!.calculate_rank()
+    if (!player) {
+      throw Error(`KeyError: '${name}'`)
+    }
+
+    player.elo = this.base_elo
   }
 
-  add_elo(player: string, elo: number) {
-    this.players.get(player)!.elo += elo
+  add_elo(name: string, elo: number) {
+    const player = this.players.get(name)
 
-    if (this.rankings) this.players.get(player)!.calculate_rank()
+    if (!player) {
+      throw Error(`KeyError: '${name}'`)
+    }
+
+    player.elo += elo
   }
 
-  remove_elo(player: string, elo: number) {
-    this.players.get(player)!.elo -= elo
+  remove_elo(name: string, elo: number) {
+    const player = this.players.get(name)
 
-    if (this.rankings) this.players.get(player)!.calculate_rank()
+    if (!player) {
+      throw Error(`KeyError: '${name}'`)
+    }
+
+    player.elo -= elo
   }
 
   /* Return Methods */
-  get_player_elo(player: string) {
-    return this.players.get(player)!.elo
+
+  get_player_elo(name: string) {
+    const player = this.players.get(name)
+
+    if (!player) {
+      throw Error(`KeyError: '${name}'`)
+    }
+
+    return player.elo
   }
 
-  get_player_rank(player: string): string | undefined {
-    return this.players.get(player)!.rank
+  get_player_wins(name: string) {
+    const player = this.players.get(name)
+
+    if (!player) {
+      throw Error(`KeyError: '${name}'`)
+    }
+
+    return player.wins
   }
 
-  get_player_wins(player: string) {
-    return this.players.get(player)!.wins
+  get_player_losses(name: string) {
+    const player = this.players.get(name)
+
+    if (!player) {
+      throw Error(`KeyError: '${name}'`)
+    }
+
+    return player.losses
   }
 
-  get_player_losses(player: string) {
-    return this.players.get(player)!.losses
-  }
+  get_player_draws(name: string) {
+    const player = this.players.get(name)
 
-  get_player_draws(player: string) {
-    return this.players.get(player)!.draws
-  }
+    if (!player) {
+      throw Error(`KeyError: '${name}'`)
+    }
 
-  get_player_count() {
-    return this.players.size
+    return player.draws
   }
 
   /* Return List Methods */
 
   get_overall_list() {
-    const players: PlayerStatistics[] = []
-    this.players.forEach((stats: Player, player: string) => {
-      players.push({ player, ...stats })
+    const players: Player[] = []
+
+    this.players.forEach((stats, name) => {
+      players.push({ ...stats, name })
     })
 
-    return players.sort(
-      (a: PlayerStatistics, b: PlayerStatistics) => b.elo - a.elo
-    )
+    return players.sort((player_a, player_b) => player_b.elo - player_a.elo)
   }
 
   get_players_with_elo(elo: number) {
     const players: string[] = []
     this.players.forEach((stats: Player, player: string) => {
       if (stats.elo === elo) {
-        players.push(player)
-      }
-    })
-    return players
-  }
-
-  get_players_with_rank(rank: string) {
-    const players: string[] = []
-    this.players.forEach((stats: Player, player: string) => {
-      if (stats.rank === rank) {
         players.push(player)
       }
     })
@@ -154,26 +169,45 @@ export default class EloSystem {
 
   /* Main Matching System */
 
-  record_match({ winner, loser, draw = false }: MatchRecord) {
-    const playerA = this.players.get(winner)!
-    const playerB = this.players.get(loser)!
+  record_match(player_a: string, player_b: string, winner?: string) {
+    const playerA = this.players.get(player_a)
+    const playerB = this.players.get(player_b)
+
+    if (!playerA) {
+      throw Error(`KeyError: '${playerA}'`)
+    }
+
+    if (!playerB) {
+      throw Error(`KeyError: '${playerB}'`)
+    }
 
     const ratingsA = 10 ** (playerA.elo / 400)
     const ratingsB = 10 ** (playerB.elo / 400)
     const expectedScoreA = ratingsA / (ratingsA + ratingsB)
     const expectedScoreB = ratingsB / (ratingsA + ratingsB)
 
-    if (draw) {
-      playerA.draws += 1
-      playerB.draws += 1
-      playerA.elo += Math.floor(this.k_factor * (0.5 - expectedScoreA))
-      playerB.elo += Math.floor(this.k_factor * (0.5 - expectedScoreB))
-    } else {
+    let score_a: number
+    let score_b: number
+
+    if (winner === player_a) {
+      score_a = 1
+      score_b = 0
       playerA.wins += 1
       playerB.losses += 1
-      playerA.elo += Math.floor(this.k_factor * (1 - expectedScoreA))
-      playerB.elo += Math.floor(this.k_factor * (0 - expectedScoreB))
+    } else if (winner === player_b) {
+      score_a = 0
+      score_b = 1
+      playerA.losses += 1
+      playerB.wins += 1
+    } else {
+      score_a = 0.5
+      score_b = 0.5
+      playerA.draws += 1
+      playerB.draws += 1
     }
+
+    playerA.elo += Math.floor(this.k_factor * (score_a - expectedScoreA))
+    playerB.elo += Math.floor(this.k_factor * (score_b - expectedScoreB))
 
     playerA.elo = Math.max(playerA.elo, 0)
     playerB.elo = Math.max(playerB.elo, 0)

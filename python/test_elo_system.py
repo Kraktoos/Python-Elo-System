@@ -15,8 +15,8 @@ def example_system():
 
 def test_add_player(example_system: EloSystem):
     assert example_system.get_overall_list() == [
-        {"player": "Bob", "elo": 1400, "wins": 0, "losses": 0, "draws": 0},
-        {"player": "Alice", "elo": 1000, "wins": 0, "losses": 0, "draws": 0},
+        {"name": "Bob", "elo": 1400, "wins": 0, "losses": 0, "draws": 0},
+        {"name": "Alice", "elo": 1000, "wins": 0, "losses": 0, "draws": 0},
     ]
 
 
@@ -24,7 +24,7 @@ def test_remove_player(example_system: EloSystem):
     example_system.remove_player("Bob")
 
     assert example_system.get_overall_list() == [
-        {"player": "Alice", "elo": 1000, "wins": 0, "losses": 0, "draws": 0},
+        {"name": "Alice", "elo": 1000, "wins": 0, "losses": 0, "draws": 0},
     ]
 
 

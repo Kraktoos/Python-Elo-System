@@ -70,7 +70,7 @@ class EloSystem:
         players: list[dict[str, int | str]] = []
 
         for name, player in self.players.items():
-            dictionary: dict[str, int | str] = {"player": name}
+            dictionary: dict[str, int | str] = {"name": name}
             dictionary.update(asdict(player))
             players.append(dictionary)
 
